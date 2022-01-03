@@ -13,19 +13,19 @@ server.post('/',(req: CustomRequest<Task>, res: Response) => {
   start(req.body).then(()=>{
     res.send();
   }).catch(()=>{
-    res.status(500);
+    res.sendStatus(500);
   });
 })
 
 server.post('/test',(req: CustomRequest<Task>, res: Response)=>{
   console.log(req.body); 
-  res.send(200);
+  res.sendStatus(200);
 });
 
 server.delete('/',(req: CustomRequest<Task>, res: Response) => {
   end(req.body).then(()=>{
     res.send();
   }).catch(()=>{
-    res.status(500);
+    res.sendStatus(500);
   });
 })
