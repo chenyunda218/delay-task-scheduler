@@ -59,7 +59,7 @@ export function initMysql(){
           if(err){
             reject(err)
           } else {
-            conn.query(`SELECT id,payload,url,channel,token, TIMESTAMPDIFF(SECOND, action_time, NOW()) AS delay 
+            conn.query(`SELECT id,payload,url,channel,token, TIMESTAMPDIFF(SECOND, NOW(), action_time) AS delay 
             FROM ${mysqlConfig.table}`,[],(err,results)=>{
               results.forEach((e: any )=> {
                 let t: Task = {

@@ -12,28 +12,25 @@ export interface Task {
 let timeouts = new Map<string, Map<string, NodeJS.Timeout>>();
 
 function action(...args: any[]) {
-
   const t = args[0][0];
+  timeouts.get(t.channel)?.delete(t.id);
   notifier(t).then(()=> {
     deleteDB(t);
-    timeouts.get(t.channel)?.delete(t.id);
   })
   .catch(()=>{
-    t.delay = 60;
-    startSetTimeout(t);
+    t.delay = 5;
+    timeouts.get(t.channel)?.set(t.id, setTimeout(action, 30000, [t]));
   })
 }
 
 export function startSetTimeout(t: Task) {
-  if(timeouts.has(t.channel)){
-    if(timeouts.get(t.channel)?.has(t.id)) {
-      clearTimeout(Number(timeouts.get(t.channel)?.get(t.id)));
-    }
-  } else {
+  if(!timeouts.has(t.channel)){
     timeouts.set(t.channel, new Map<string, NodeJS.Timeout>());
   }
-  const delay = (t.delay > 0 ? t.delay : 0);
-  timeouts.get(t.channel)?.set(t.id, setTimeout(action, delay * 1000, [t]));
+  if(!timeouts.get(t.channel)?.has(t.id)) {
+    const delay = (t.delay > 0 ? t.delay : 0);
+    timeouts.get(t.channel)?.set(t.id, setTimeout(action, delay * 1000, [t]));
+  }
 }
 
 export function start(t: Task) {

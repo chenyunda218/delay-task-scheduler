@@ -18,8 +18,8 @@ server.post('/',(req: CustomRequest<Task>, res: Response) => {
 })
 
 server.post('/test',(req: CustomRequest<Task>, res: Response)=>{
-  console.log(req.body);
-  res.send();
+  console.log(req.body); 
+  res.send(200);
 });
 
 server.delete('/',(req: CustomRequest<Task>, res: Response) => {
