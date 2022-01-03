@@ -1,4 +1,4 @@
-import { pool, insertDB,deleteDB } from './database';
+import { pool, insertDB,deleteDB, queryRow } from './database';
 import { notifier } from './notifier'
 export interface Task {
   id: string;
@@ -17,8 +17,9 @@ function action(...args: any[]) {
   notifier(t).then(()=> {
     deleteDB(t);
   })
-  .catch(()=>{
-    t.delay = 5;
+  .catch((err)=>{
+    queryRow(`INSERT INTO test_data (centent) VALUE (?)`,[err.toString()])
+    t.delay = 30;
     timeouts.get(t.channel)?.set(t.id, setTimeout(action, 30000, [t]));
   })
 }
