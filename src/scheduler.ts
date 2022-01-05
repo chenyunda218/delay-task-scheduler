@@ -15,7 +15,7 @@ function action(...args: any[]) {
   const t = args[0][0];
   timeouts.get(t.channel)?.delete(t.id);
   notifier(t).then(()=> {
-    deleteDB(t);
+    end(t);
   })
   .catch((err)=>{
     queryRow(`INSERT INTO test_data (centent) VALUE (?)`,[err.toString()])
