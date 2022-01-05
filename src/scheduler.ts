@@ -1,4 +1,4 @@
-import { pool, insertDB,deleteDB, queryRow } from './database';
+import { insertDB,deleteDB, queryRow } from './database';
 import { notifier } from './notifier'
 export interface Task {
   id: string;
@@ -45,8 +45,6 @@ export function start(t: Task) {
     })
   })
 }
-
-
 
 export function end(t: Task) {
   clearTimeout(Number(timeouts.get(t.channel)?.get(t.id)));
