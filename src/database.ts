@@ -61,14 +61,17 @@ export function initMysql(){
           } else {
             conn.query(`SELECT id,payload,url,channel,token, TIMESTAMPDIFF(SECOND, NOW(), action_time) AS delay 
             FROM ${mysqlConfig.table}`,[],(err,results)=>{
-              results.forEach((e: any )=> {
-                let t: Task = {
-                  ...e,
-                  payload: JSON.parse(e.payload),
-                }
-                startSetTimeout(t)
-              });
-              resolve(undefined)
+              if(err) reject(err);
+              else {
+                results.forEach((e: any )=> {
+                  let t: Task = {
+                    ...e,
+                    payload: JSON.parse(e.payload),
+                  }
+                  startSetTimeout(t)
+                });
+                resolve(undefined)
+              }
             })
           }
         })
