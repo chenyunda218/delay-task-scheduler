@@ -1,6 +1,6 @@
 import  express, { Express, Request, Response } from 'express';
 import { queryRow } from './database';
-import { end, start, Task } from './scheduler';
+import { end, startSetTimeout, Task } from './scheduler';
 
 export const server: Express = express();
 
@@ -10,17 +10,17 @@ interface CustomRequest<T> extends Request {
   body: T
 }
 
-server.post('/',(req: CustomRequest<Task>, res: Response) => {
-  queryRow(`INSERT INTO test_data (centent) VALE (?)`,['post'])
-  start(req.body).then(()=>{
+server.put('/',(req: CustomRequest<Task>, res: Response) => {
+  startSetTimeout(req.body).then(()=>{
     res.send();
-  }).catch(()=>{
+  }).catch((err)=>{
+    console.log(err)
     res.sendStatus(500);
   });
 })
 
 server.post('/test',(req: CustomRequest<Task>, res: Response)=>{
-  console.log(req.body); 
+  console.log('/test',req.body); 
   res.sendStatus(200);
 });
 

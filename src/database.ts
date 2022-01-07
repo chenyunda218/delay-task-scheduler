@@ -1,5 +1,5 @@
 import mysql, {PoolConnection} from 'mysql';
-import { startSetTimeout, Task } from './scheduler';
+import { startSetTimeout, Task,retry } from './scheduler';
 import { mysql as config } from './config';
 
 
@@ -19,6 +19,13 @@ export function insertDB(t: Task): Promise<unknown> {
     (id,channel,token,url,payload,action_time) VALUE 
     (?,?,?,?,?,DATE_ADD(NOW(), INTERVAL ? SECOND))`, 
     [id,channel,token,url,JSON.stringify(payload),delay])
+}
+
+export function updateDB(t: Task): Promise<unknown> {
+  let { id,channel,token,url,delay,payload } = t; 
+  return queryRow(`UPDATE ${mysqlConfig.table} 
+  SET token=?,url=?,payload=?,action_time=DATE_ADD(NOW(), INTERVAL ? SECOND),creation_time=NOW() WHERE channel = ? AND id = ?
+  `,[token,url,JSON.stringify(payload),delay,channel,id]);
 }
 
 export let queryRow = (sql: string, args: Array<any>): Promise<any> => {
@@ -68,7 +75,7 @@ export function initMysql(){
                     ...e,
                     payload: JSON.parse(e.payload),
                   }
-                  startSetTimeout(t)
+                  retry(t)
                 });
                 resolve(undefined)
               }
