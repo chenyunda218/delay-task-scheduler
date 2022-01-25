@@ -17,7 +17,7 @@ server.put('/',(req: CustomRequest<Task>, res: Response) => {
     console.log(err)
     res.sendStatus(500);
   });
-})
+});
 
 server.post('/test',(req: CustomRequest<Task>, res: Response)=>{
   console.log('/test',req.body); 
@@ -30,4 +30,4 @@ server.delete('/',(req: CustomRequest<Task>, res: Response) => {
   }).catch(()=>{
     res.sendStatus(500);
   });
-})
+});
